@@ -1,0 +1,14 @@
+{
+  "name": "art-aim_gulp",
+  "version": "1.0.0",
+  "description": "Build gulp flr",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "art-aim",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  }
+}
