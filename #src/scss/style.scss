@@ -1,0 +1,9 @@
+@import 'normilize/normilize';
+@import 'normilize/reset';
+@import "mixin/fonts";
+@import "fonts";
+
+body {
+    font-size: 22px;
+    display: flex;
+}
