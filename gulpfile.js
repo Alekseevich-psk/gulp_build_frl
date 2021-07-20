@@ -1,6 +1,6 @@
 // system params
 let project_flr = "dist";
-let source_flr = "#src";
+let source_flr = "app";
 let baseDir = "./" + project_flr + "/";
 let fs = require('fs');
 
@@ -8,26 +8,28 @@ let fs = require('fs');
 let path = {
     build: {
         html: project_flr + "/",
-        css: project_flr + "/css/",
-        js: project_flr + "/js/",
-        img: project_flr + "/img/",
-        fonts: project_flr + "/fonts/",
-        libs: project_flr + "/libs/",
+        css: project_flr + "/assets/template/css/",
+        js: project_flr + "/assets/template/js/",
+        img: project_flr + "/assets/template/images/",
+        fonts: project_flr + "/assets/template/fonts/",
+        libs: project_flr + "/assets/template/libs/",
+        svg: project_flr + "/assets/template/images/svg/"
     },
     src: {
         html: source_flr + "/html/*.html",
         css: source_flr + "/scss/style.scss",
-        js: source_flr + "/js/main.js",
-        libs: source_flr + "/libs/**/*.js",
-        img: source_flr + "/img/**/*.{jpg,png,svg,gif,ico,webp}",
-        fonts: source_flr + "/fonts/*.ttf",
+        js: source_flr + "/scripts/main.js",
+        img: source_flr + "/images/**/*.{jpg,png,svg,gif,ico,webp}",
+        fonts: source_flr + "/fonts/*.{otf,woff2,woff}",
+        svg: source_flr + "/html/svg/*.svg"
     },
     watch: {
         html: source_flr + "/**/*.html",
         css: source_flr + "/scss/**/*.scss",
-        js: source_flr + "/js/**/*.js",
-        libs: source_flr + "/libs/**/*.js",
-        img: source_flr + "/img/**/*.{jpg,png,svg,gif,ico,webp}"
+        js: source_flr + "/scripts/**/*.js",
+        libs: source_flr + "/libs/**/*.{js}",
+        img: source_flr + "/images/**/*.{jpg,png,svg,gif,ico,webp}",
+        svg: source_flr + "/html/svg/*.svg"
     },
     clean: baseDir,
 }
@@ -35,6 +37,8 @@ let path = {
 // plugins
 let { src, dest } = require("gulp"),
     gulp = require("gulp"),
+    plumber = require('gulp-plumber'),
+    sourcemaps = require('gulp-sourcemaps'),
     fileinclude = require('gulp-file-include'),
     del = require('del'),
     formatHtml = require('gulp-format-html'),
@@ -55,6 +59,11 @@ let { src, dest } = require("gulp"),
     fonter = require('gulp-fonter'),
     concat = require('gulp-concat'),
     browsersync = require("browser-sync").create();
+
+
+const jsFiles = [
+    'node_modules/swiper/swiper-bundle.js',
+];
 
 function browserSync() {
     browsersync.init({
@@ -81,22 +90,23 @@ function html() {
 
 function css() {
     return src(path.src.css)
+        .pipe(sourcemaps.init())
         .pipe(
             scss({
                 outputStyle: "expanded"
             })
         )
-        // media-queries all to the end of the document
-        .pipe(
-            gcmq()
-        )
+        // .pipe(
+        //     gcmq()
+        // )
+        .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(
             autoprefixer({
                 overrideBrowserslist: ['last 5 version'],
                 cascade: true
             })
         )
-        .pipe(webpcss())
+        // .pipe(webpcss())
         .pipe(dest(path.build.css))
         .pipe(cleanCSS())
         .pipe(
@@ -104,6 +114,7 @@ function css() {
                 extname: ".min.css"
             })
         )
+        .pipe(sourcemaps.write())
         .pipe(dest(path.build.css))
         .pipe(browsersync.stream())
 }
@@ -114,12 +125,19 @@ function js() {
         .pipe(babel({
             presets: ['@babel/env']
         }))
+        .pipe(
+            rename({
+                basename: "scripts",
+                extname: ".js"
+            })
+        )
         .pipe(dest(path.build.js))
         .pipe(
             uglify()
         )
         .pipe(
             rename({
+                basename: "scripts",
                 extname: ".min.js"
             })
         )
@@ -128,9 +146,36 @@ function js() {
 }
 
 function libs() {
-    return src(path.src.libs)
-        .pipe(dest(path.build.libs))
+    return src(jsFiles)
+        .pipe(plumber())
+        .pipe(sourcemaps.init())
+        .pipe(concat('libs.js'))
+        .pipe(uglify())
+        .pipe(rename('libs.min.js'))
+        .pipe(sourcemaps.write(''))
+        .pipe(gulp.dest(path.build.libs))
         .pipe(browsersync.stream())
+}
+
+function fonts() {
+    return src(path.src.fonts)
+        .pipe(dest(path.build.fonts))
+        .pipe(browsersync.stream())
+}
+
+function svg() {
+    return gulp.src([source_flr + '/html/svg/*.svg'])
+        .pipe(dest(path.build.svg))
+        .pipe(svgSprite({
+            mode: {
+                stack: {
+                    sprite: "../icons/icons.svg",
+                    example: true,
+                }
+            },
+        }
+    ))
+    .pipe(gulp.dest(path.build.svg))
 }
 
 function images() {
@@ -154,15 +199,6 @@ function images() {
         .pipe(browsersync.stream())
 }
 
-function fonts() {
-    src(path.src.fonts)
-        .pipe(ttf2woff())
-        .pipe(dest(path.build.fonts))
-    return src(path.src.fonts)
-        .pipe(ttf2woff2())
-        .pipe(dest(path.build.fonts))
-}
-
 // eventListener
 function watchFiles() {
     gulp.watch([path.watch.html], html);
@@ -170,6 +206,7 @@ function watchFiles() {
     gulp.watch([path.watch.js], js);
     gulp.watch([path.watch.libs], libs);
     gulp.watch([path.watch.img], images);
+    gulp.watch([path.watch.svg], svg);
 }
 
 // add fonts in style.scss
@@ -204,20 +241,7 @@ gulp.task('fonter', function () {
         .pipe(dest(source_flr + '/fonts/'))
 })
 
-// create svgSprite
-gulp.task('svgSprite', function () {
-    return gulp.src([source_flr + '/iconsprite/*.svg'])
-        .pipe(svgSprite({
-            mode: {
-                stack: {
-                    sprite: "../icons/icons.svg",
-                    example: true
-                }
-            }
-        }))
-})
-
-let build = gulp.series(clean, html, libs, gulp.parallel(css, js, images, fonts), fontsStyle)
+let build = gulp.series(clean, html, libs, gulp.parallel(css, js, images, svg), fonts)
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
 
@@ -225,6 +249,7 @@ exports.fontsStyle = fontsStyle;
 exports.images = images;
 exports.fonts = fonts;
 exports.libs = libs;
+exports.svg = svg;
 exports.js = js;
 exports.css = css;
 exports.html = html;
