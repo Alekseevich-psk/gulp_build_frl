@@ -13,7 +13,7 @@ let path = {
         img: project_flr + "/assets/template/images/",
         fonts: project_flr + "/assets/template/fonts/",
         libs: project_flr + "/assets/template/libs/",
-        svg: project_flr + "/assets/template/images/svg/"
+        svg: project_flr + "/assets/template/images/svg/",
     },
     src: {
         html: source_flr + "/html/*.html",
@@ -21,7 +21,9 @@ let path = {
         js: source_flr + "/scripts/main.js",
         img: source_flr + "/images/**/*.{jpg,png,svg,gif,ico,webp}",
         fonts: source_flr + "/fonts/*.{otf,ttf,woff2,woff}",
-        svg: source_flr + "/html/svg/*.svg"
+        sourcesFonts: source_flr + "/fonts/sources-fonts/*.{otf,ttf,woff2,woff}",
+        svg: source_flr + "/html/svg/*.svg",
+        fontsStorage: source_flr + "/fonts/",
     },
     watch: {
         html: source_flr + "/**/*.html",
@@ -157,13 +159,18 @@ function libs() {
         .pipe(browsersync.stream())
 }
 
-function fonts() {
-    src(path.src.fonts)
+function fonts2woff() {
+    src(path.src.sourcesFonts)
         .pipe(ttf2woff())
-        .pipe(dest(path.build.fonts));
-    return src(path.src.fonts)
+        .pipe(dest(path.src.fontsStorage));
+    return src(path.src.sourcesFonts)
         .pipe(ttf2woff2())
-        .pipe(dest(path.build.fonts));
+        .pipe(dest(path.src.fontsStorage));
+}
+
+function fonts() {
+    return src(path.src.fonts)
+        .pipe(dest(path.build.fonts))
 }
 
 function svg() {
@@ -177,8 +184,8 @@ function svg() {
                 }
             },
         }
-    ))
-    .pipe(gulp.dest(path.build.svg))
+        ))
+        .pipe(gulp.dest(path.build.svg))
 }
 
 function images() {
@@ -217,16 +224,18 @@ function fontsStyle() {
     let file_content = fs.readFileSync(source_flr + '/scss/fonts.scss');
     if (file_content == '') {
         fs.writeFile(source_flr + '/scss/fonts.scss', '', cb);
-        return fs.readdir(path.build.fonts, function (err, items) {
+        return fs.readdir(path.src.fontsStorage, function (err, items) {
             if (items) {
                 let c_fontname;
                 for (var i = 0; i < items.length; i++) {
-                    let fontname = items[i].split('.');
-                    fontname = fontname[0];
-                    if (c_fontname != fontname) {
-                        fs.appendFile(source_flr + '/scss/fonts.scss', '@include font("' + fontname + '", "' + fontname + '", "400", "normal");\r\n', cb);
+                    if (items[i] != 'sources-fonts') {
+                        let fontname = items[i].split('.');
+                        fontname = fontname[0];
+                        if (c_fontname != fontname) {
+                            fs.appendFile(source_flr + '/scss/fonts.scss', '@include font("' + fontname + '", "' + fontname + '", "400", "normal");\r\n', cb);
+                        }
+                        c_fontname = fontname;
                     }
-                    c_fontname = fontname;
                 }
             }
         })
@@ -244,13 +253,14 @@ gulp.task('fonter', function () {
         .pipe(dest(source_flr + '/fonts/'))
 })
 
-let build = gulp.series(clean, html, libs, gulp.parallel(css, js, images, svg), fonts, fontsStyle)
+let build = gulp.series(clean, html, libs, gulp.parallel(css, js, images, svg, fonts))
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
 
 exports.fontsStyle = fontsStyle;
-exports.images = images;
+exports.fonts2woff = fonts2woff;
 exports.fonts = fonts;
+exports.images = images;
 exports.libs = libs;
 exports.svg = svg;
 exports.js = js;
