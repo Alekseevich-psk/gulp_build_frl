@@ -20,7 +20,7 @@ let path = {
         css: source_flr + "/scss/style.scss",
         js: source_flr + "/scripts/main.js",
         img: source_flr + "/images/**/*.{jpg,png,svg,gif,ico,webp}",
-        fonts: source_flr + "/fonts/*.{otf,woff2,woff}",
+        fonts: source_flr + "/fonts/*.{otf,ttf,woff2,woff}",
         svg: source_flr + "/html/svg/*.svg"
     },
     watch: {
@@ -158,9 +158,12 @@ function libs() {
 }
 
 function fonts() {
+    src(path.src.fonts)
+        .pipe(ttf2woff())
+        .pipe(dest(path.build.fonts));
     return src(path.src.fonts)
-        .pipe(dest(path.build.fonts))
-        .pipe(browsersync.stream())
+        .pipe(ttf2woff2())
+        .pipe(dest(path.build.fonts));
 }
 
 function svg() {
@@ -241,7 +244,7 @@ gulp.task('fonter', function () {
         .pipe(dest(source_flr + '/fonts/'))
 })
 
-let build = gulp.series(clean, html, libs, gulp.parallel(css, js, images, svg), fonts)
+let build = gulp.series(clean, html, libs, gulp.parallel(css, js, images, svg), fonts, fontsStyle)
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
 
