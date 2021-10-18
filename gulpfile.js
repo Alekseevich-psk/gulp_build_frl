@@ -60,6 +60,7 @@ let { src, dest } = require("gulp"),
     ttf2woff2 = require('gulp-ttf2woff2'),
     fonter = require('gulp-fonter'),
     concat = require('gulp-concat'),
+    jsImport = require('gulp-js-import'),
     browsersync = require("browser-sync").create();
 
 
@@ -98,9 +99,6 @@ function css() {
                 outputStyle: "expanded"
             })
         )
-        // .pipe(
-        //     gcmq()
-        // )
         .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(
             autoprefixer({
@@ -108,7 +106,7 @@ function css() {
                 cascade: true
             })
         )
-        // .pipe(webpcss())
+        .pipe(webpcss())
         .pipe(dest(path.build.css))
         .pipe(cleanCSS())
         .pipe(
@@ -123,7 +121,7 @@ function css() {
 
 function js() {
     return src(path.src.js)
-        .pipe(fileinclude())
+        .pipe(jsImport())
         .pipe(babel({
             presets: ['@babel/env']
         }))
