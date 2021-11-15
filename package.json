@@ -43,7 +43,8 @@
     "gulp-webpcss": "^1.1.1",
     "jshint": "^2.12.0",
     "node-sass": "^6.0.0",
-    "webp-converter": "^2.2.3"
+    "webp-converter": "^2.2.3",
+    "gulp-rigger": "^0.5.8"
   },
   "dependencies": {
     "swiper": "^6.7.5"
