@@ -1,1 +1,1 @@
-@@include('plugins/webp.js');
+console.log("test");
