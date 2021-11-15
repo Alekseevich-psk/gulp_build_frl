@@ -18,7 +18,7 @@ let path = {
     src: {
         html: source_flr + "/html/*.html",
         css: source_flr + "/scss/style.scss",
-        js: source_flr + "/scripts/main.js",
+        js: source_flr + "/scripts/**/*.js",
         img: source_flr + "/images/**/*.{jpg,png,svg,gif,ico,webp}",
         fonts: source_flr + "/fonts/*.{otf,ttf,woff2,woff}",
         sourcesFonts: source_flr + "/fonts/sources-fonts/*.{otf,ttf,woff2,woff}",
@@ -52,15 +52,12 @@ let { src, dest } = require("gulp"),
     uglify = require('gulp-uglify-es').default,
     babel = require('gulp-babel'),
     imagemin = require('gulp-imagemin'),
-    webp = require('gulp-webp'),
-    webpHTML = require('gulp-webp-html'),
-    webpcss = require("gulp-webpcss"),
     svgSprite = require('gulp-svg-sprite'),
     ttf2woff = require('gulp-ttf2woff'),
     ttf2woff2 = require('gulp-ttf2woff2'),
     fonter = require('gulp-fonter'),
     concat = require('gulp-concat'),
-    jsImport = require('gulp-js-import'),
+    rigger = require('gulp-rigger'),
     browsersync = require("browser-sync").create();
 
 
@@ -85,7 +82,6 @@ function clean() {
 function html() {
     return src(path.src.html)
         .pipe(fileinclude())
-        .pipe(webpHTML())
         .pipe(formatHtml())
         .pipe(dest(path.build.html))
         .pipe(browsersync.stream())
@@ -106,7 +102,7 @@ function css() {
                 cascade: true
             })
         )
-        .pipe(webpcss())
+        // .pipe(webpcss())
         .pipe(dest(path.build.css))
         .pipe(cleanCSS())
         .pipe(
@@ -121,7 +117,7 @@ function css() {
 
 function js() {
     return src(path.src.js)
-        .pipe(jsImport())
+        .pipe(rigger())
         .pipe(babel({
             presets: ['@babel/env']
         }))
@@ -188,12 +184,6 @@ function svg() {
 
 function images() {
     return src(path.src.img)
-        .pipe(
-            webp({
-                quality: 70
-            })
-        )
-        .pipe(dest(path.build.img))
         .pipe(src(path.src.img))
         .pipe(
             imagemin({
@@ -251,7 +241,7 @@ gulp.task('fonter', function () {
         .pipe(dest(source_flr + '/fonts/'))
 })
 
-let build = gulp.series(clean, html, libs, gulp.parallel(css, js, images, svg, fonts))
+let build = gulp.series(clean, html, libs, gulp.parallel(css, js, images, fonts))
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
 
