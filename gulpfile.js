@@ -57,7 +57,6 @@ let { src, dest } = require("gulp"),
     ttf2woff2 = require('gulp-ttf2woff2'),
     fonter = require('gulp-fonter'),
     concat = require('gulp-concat'),
-    rigger = require('gulp-rigger'),
     browsersync = require("browser-sync").create();
 
 
@@ -117,16 +116,10 @@ function css() {
 
 function js() {
     return src(path.src.js)
-        .pipe(rigger())
         .pipe(babel({
             presets: ['@babel/env']
         }))
-        .pipe(
-            rename({
-                basename: "scripts",
-                extname: ".js"
-            })
-        )
+        .pipe(concat('scripts.js'))
         .pipe(dest(path.build.js))
         .pipe(
             uglify()
