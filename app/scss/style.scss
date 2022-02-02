@@ -1,23 +1,10 @@
-@import 'normilize/normilize';
 @import 'normilize/reset';
-@import "mixin/fonts";
 @import "fonts";
+@import "./setting/variables";
+@import "./setting/main";
 
-body {
-    font-size: 16px;
-    line-height: 1.4;
-    display: flex;
-    padding: 0px 0px;
-    margin: 0px 0px;
-}
+@import "./elements/header";
+@import "./elements/button";
+@import "./elements/formElements";
 
-* {
-    box-sizing: border-box;
-}
-
-.container {
-    width: 1230px;
-    margin: 0px auto;
-    font-size: 16px;
-    position: relative;
-}
+@import "./page/indexPage/index";
