@@ -13,12 +13,14 @@ let path = {
         img: project_flr + "/assets/template/images/",
         fonts: project_flr + "/assets/template/fonts/",
         libs: project_flr + "/assets/template/libs/",
+        video: project_flr + "/assets/template/video/",
         svg: project_flr + "/assets/template/images/svg/",
     },
     src: {
         html: source_flr + "/html/*.html",
         css: source_flr + "/scss/style.scss",
         js: source_flr + "/scripts/**/*.js",
+        video: source_flr + "/video/*.{mp4, webm, ogv, swf}",
         img: source_flr + "/images/**/*.{jpg,png,svg,gif,ico,webp}",
         fonts: source_flr + "/fonts/*.{otf,ttf,woff2,woff}",
         sourcesFonts: source_flr + "/fonts/sources-fonts/*.{otf,ttf,woff2,woff}",
@@ -28,6 +30,7 @@ let path = {
     watch: {
         html: source_flr + "/**/*.html",
         css: source_flr + "/scss/**/*.scss",
+        video: source_flr + "/video/**/*.{mp4,webm,ogv,swf}",
         js: source_flr + "/scripts/**/*.js",
         libs: source_flr + "/libs/**/*.{js}",
         img: source_flr + "/images/**/*.{jpg,png,svg,gif,ico,webp}",
@@ -160,6 +163,11 @@ function fonts() {
         .pipe(dest(path.build.fonts))
 }
 
+function video() {
+    return src(path.src.video)
+        .pipe(dest(path.build.video))
+}
+
 function svg() {
     return gulp.src([source_flr + '/html/svg/*.svg'])
         .pipe(dest(path.build.svg))
@@ -178,14 +186,14 @@ function svg() {
 function images() {
     return src(path.src.img)
         .pipe(src(path.src.img))
-        .pipe(
-            imagemin({
-                progressive: true,
-                svgoPlugins: [{ removeViewBox: false }],
-                interlaced: true,
-                optimizationLevel: 3 // 0 to 7
-            })
-        )
+        // .pipe(
+        //     imagemin({
+        //         progressive: true,
+        //         svgoPlugins: [{ removeViewBox: false }],
+        //         interlaced: true,
+        //         optimizationLevel: 0 // 0 to 7
+        //     })
+        // )
         .pipe(dest(path.build.img))
         .pipe(browsersync.stream())
 }
@@ -198,6 +206,7 @@ function watchFiles() {
     gulp.watch([path.watch.libs], libs);
     gulp.watch([path.watch.img], images);
     gulp.watch([path.watch.svg], svg);
+    gulp.watch([path.watch.svg], video);
 }
 
 // add fonts in style.scss
@@ -234,7 +243,7 @@ gulp.task('fonter', function () {
         .pipe(dest(source_flr + '/fonts/'))
 })
 
-let build = gulp.series(clean, html, libs, gulp.parallel(css, js, images, fonts))
+let build = gulp.series(clean, html, libs, gulp.parallel(css, video, js, images, fonts))
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
 
@@ -242,6 +251,7 @@ exports.fontsStyle = fontsStyle;
 exports.fonts2woff = fonts2woff;
 exports.fonts = fonts;
 exports.images = images;
+exports.video = video;
 exports.libs = libs;
 exports.svg = svg;
 exports.js = js;
