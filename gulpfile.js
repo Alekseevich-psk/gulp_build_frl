@@ -206,7 +206,7 @@ function watchFiles() {
     gulp.watch([path.watch.libs], libs);
     gulp.watch([path.watch.img], images);
     gulp.watch([path.watch.svg], svg);
-    gulp.watch([path.watch.svg], video);
+    gulp.watch([path.watch.video], video);
 }
 
 // add fonts in style.scss
