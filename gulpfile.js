@@ -140,11 +140,11 @@ function js() {
 function libs() {
     return src(jsFiles)
         .pipe(plumber())
-        .pipe(sourcemaps.init())
+        // .pipe(sourcemaps.init())
         .pipe(concat('libs.js'))
         .pipe(uglify())
         .pipe(rename('libs.min.js'))
-        .pipe(sourcemaps.write(''))
+        // .pipe(sourcemaps.write(''))
         .pipe(gulp.dest(path.build.libs))
         .pipe(browsersync.stream())
 }
