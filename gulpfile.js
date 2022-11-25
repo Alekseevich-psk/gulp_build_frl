@@ -1,31 +1,33 @@
 // system params
-let project_flr = "dist";
-let source_flr = "app";
-let baseDir = "./" + project_flr + "/";
-let fs = require('fs');
+const project_flr = "dist";
+const source_flr = "app";
+const baseDir = "./" + project_flr + "/";
+const fs = require('fs');
+const pathFiles = "/assets/template/";
+const outPathFiles = "/assets/template/";
 
 // main path
 let path = {
     build: {
         html: project_flr + "/",
-        css: project_flr + "/assets/template/css/",
-        js: project_flr + "/assets/template/js/",
-        img: project_flr + "/assets/template/images/",
-        fonts: project_flr + "/assets/template/fonts/",
-        libs: project_flr + "/assets/template/libs/",
-        video: project_flr + "/assets/template/video/",
-        svg: project_flr + "/assets/template/images/svg/",
+        css: project_flr + pathFiles + "css/",
+        js: project_flr + pathFiles + "js/",
+        img: project_flr + pathFiles + "images/",
+        fonts: project_flr + pathFiles + "fonts/",
+        libs: project_flr + pathFiles + "libs/",
+        video: project_flr + pathFiles + "video/",
+        svg: project_flr + pathFiles + "images/svg/",
     },
     src: {
-        html: source_flr + "/html/*.html",
-        css: source_flr + "/scss/style.scss",
-        js: source_flr + "/scripts/**/*.js",
-        video: source_flr + "/video/*.{mp4,webm,ogv,swf}",
-        img: source_flr + "/images/**/*.{jpg,png,svg,gif,ico,webp}",
-        fonts: source_flr + "/fonts/*.{otf,ttf,woff2,woff}",
-        sourcesFonts: source_flr + "/fonts/sources-fonts/*.{otf,ttf,woff2,woff}",
-        svg: source_flr + "/html/svg/*.svg",
-        fontsStorage: source_flr + "/fonts/",
+        html: source_flr + outPathFiles + "/html/*.html",
+        css: source_flr + outPathFiles + "/scss/style.scss",
+        js: source_flr + outPathFiles + "/scripts/**/*.js",
+        video: source_flr + outPathFiles + "/video/*.{mp4,webm,ogv,swf}",
+        img: source_flr + outPathFiles + "/images/**/*.{jpg,png,svg,gif,ico,webp}",
+        fonts: source_flr + outPathFiles + "/fonts/*.{otf,ttf,woff2,woff}",
+        sourcesFonts: source_flr + outPathFiles + "/fonts/sources-fonts/*.{otf,ttf,woff2,woff}",
+        svg: source_flr + outPathFiles + "/html/svg/*.svg",
+        fontsStorage: source_flr + outPathFiles + "/fonts/",
     },
     watch: {
         html: source_flr + "/**/*.html",
@@ -140,11 +142,9 @@ function js() {
 function libs() {
     return src(jsFiles)
         .pipe(plumber())
-        // .pipe(sourcemaps.init())
         .pipe(concat('libs.js'))
         .pipe(uglify())
         .pipe(rename('libs.min.js'))
-        // .pipe(sourcemaps.write(''))
         .pipe(gulp.dest(path.build.libs))
         .pipe(browsersync.stream())
 }
