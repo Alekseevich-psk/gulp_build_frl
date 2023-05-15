@@ -1,12 +1,12 @@
 (function () {
-    const topExpert = document.querySelector(".top-expert");
-    if (!topExpert) reviews;
+    const test = document.querySelector(".test");
+    if (!test) return;
 
-    new Swiper(".top-expert__slider", {
+    new Swiper(".test__slider", {
         spaceBetween: 30,
         navigation: {
-            nextEl: ".top-expert .sl-arrows__arrow--next",
-            prevEl: ".top-expert .sl-arrows__arrow--prev",
+            nextEl: ".test .sl-arrows__arrow--next",
+            prevEl: ".test .sl-arrows__arrow--prev",
         },
         pagination: {
             el: ".swiper-pagination",
