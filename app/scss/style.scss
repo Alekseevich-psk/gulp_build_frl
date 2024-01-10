@@ -1,4 +1,4 @@
-@import './normilize/reset';
+@import "./normilize/reset";
 @import "./mixin/fonts";
 @import "./fonts";
 
@@ -12,9 +12,10 @@
 @import "./elements/input";
 @import "./elements/button";
 @import "./elements/sl-arrows";
+@import "./elements/popup";
+@import "./elements/content";
+@import "./elements/btn-top";
+@import "./elements/preloader";
+@import "./elements/animate";
 
 @import "./sections/main";
-@import "./sections/document";
-@import "./sections/faq";
-@import "./sections/reviews";
-@import "./sections/info";

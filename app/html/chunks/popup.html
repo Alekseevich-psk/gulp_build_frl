@@ -1,0 +1,46 @@
+<div class="popup">
+    <div class="popup__overlay">
+        <div class="popup__body">
+            <div class="popup__close"></div>
+            <div class="popup__wrap">
+                <div class="popup__s-title s-title">Оставьте заявку</div>
+                <div class="popup__desc">Мы перезвоним Вам максимально быстро</div>
+
+                <form action="#" class="popup__form" method="POST">
+
+                    <input type="text" name="your-name" class="your-name" id="your-name">
+                    <input type="hidden" name="formTitle" class="input" id="form-title">
+
+                    <div class="popup__item popup__item--name">
+                        <label for="name" class="label">ФИО</label>
+                        <input type="text" class="popup__input input" name="name" id="name"
+                            placeholder="Иванов Иван Иванович">
+                    </div>
+
+                    <div class="popup__item popup__item--phone">
+                        <label for="phone" class="label">Телефон</label>
+                        <input type="text" class="popup__input input" name="phone" id="phone"
+                            placeholder="+7 (000) 000-00-00">
+                    </div>
+
+                    <div class="popup__item popup__item--phone">
+                        <label for="email" class="label">E-mail</label>
+                        <input type="text" class="popup__input input" name="email" id="email"
+                            placeholder="your-mail@mail.ru">
+                    </div>
+
+                    <div class="popup__align">
+                        <button type="submit" class="popup__button button button--color">Отправить</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="popup__success">
+                <div class="popup__s-title s-title">Заявка принята в работу!</div>
+            </div>
+
+        </div>
+    </div>
+</div>

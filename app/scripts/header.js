@@ -4,19 +4,26 @@
 
     const classForHeaderScroll = "scroll";
     const marginBottomFromElement = 0;
-    const nextElem = header.nextElementSibling;
 
-    const heightElem = getMaxOfArray(header);
-    
+    const headerHeight = header.querySelector(".header__height");
+    const headerContainer = header.querySelector(".header__container");
+
     addClassForElement(header);
 
-    window.onscroll = () => {
+    window.addEventListener("scroll", () => {
         addClassForElement(header);
-    };
+    });
+
+    window.addEventListener("resize", () => {
+        addClassForElement(header);
+    });
 
     function addClassForElement(el) {
-        scrollHeight() > heightElem ? el.classList.add(classForHeaderScroll) : el.classList.remove(classForHeaderScroll);
-        nextElem.style.marginTop = heightElem + 'px';
+        scrollHeight() > getMaxOfArray(headerContainer) ? el.classList.add(classForHeaderScroll) : el.classList.remove(classForHeaderScroll);
+
+        if (headerHeight) {
+            headerHeight.style.height = getMaxOfArray(headerContainer) + "px";
+        }
     }
 
     function scrollHeight() {
