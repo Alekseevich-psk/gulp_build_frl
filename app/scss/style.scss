@@ -1,7 +1,18 @@
 @import "./normilize/reset";
-@import "./mixin/fonts";
-@import "./fonts";
 
+@import "./functions/z";
+
+@import "./mixin/flex-wrapper";
+@import "./mixin/fluid-font";
+@import "./mixin/font-size";
+@import "./mixin/fonts";
+@import "./mixin/media";
+@import "./mixin/placeholder";
+@import "./mixin/position";
+@import "./mixin/pseudo";
+@import "./mixin/res-ratio";
+
+@import "./fonts";
 @import "./setting/variables";
 @import "./setting/main";
 
