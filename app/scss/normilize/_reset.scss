@@ -198,3 +198,12 @@ input::-webkit-inner-spin-button {
 img {
     pointer-events: none;
 }
+
+html,
+body,
+img,
+div,
+a,
+table {
+    image-rendering: -webkit-optimize-contrast !important;
+}
