@@ -1,4 +1,4 @@
-@mixin for-phone {
+@mixin for-mobile {
     @media (max-width: 768px) {
         @content;
     }
@@ -18,6 +18,12 @@
 
 @mixin for-desktop {
     @media (max-width: 1440px) {
+        @content;
+    }
+}
+
+@mixin for-large {
+    @media(min-width: 2000px) {
         @content;
     }
 }
