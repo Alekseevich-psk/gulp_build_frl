@@ -3,10 +3,10 @@
     if (links.length <= 0) return;
 
     let marginTop = 100;
-    if (innerWidth <= 768) marginTop = 80;
+    if (window.innerWidth <= 768) marginTop = 80;
 
     window.addEventListener("resize", () => {
-        if (innerWidth <= 768) {
+        if (window.innerWidth <= 768) {
             marginTop = 80;
         }
     });
