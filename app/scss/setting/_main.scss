@@ -21,6 +21,12 @@ section {
     }
 }
 
+sup {
+    font-size: 10px;
+    display: inline-block;
+    vertical-align: super;
+}
+
 button,
 textarea,
 input {

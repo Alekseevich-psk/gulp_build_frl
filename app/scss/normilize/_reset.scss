@@ -207,3 +207,15 @@ a,
 table {
     image-rendering: -webkit-optimize-contrast !important;
 }
+
+sup {
+    vertical-align: baseline;
+    position: relative;
+    top: -0.4em;
+}
+
+sub {
+    vertical-align: baseline;
+    position: relative;
+    bottom: -0.4em;
+}
