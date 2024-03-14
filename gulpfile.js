@@ -121,22 +121,22 @@ function css() {
 
 function js() {
     return src(path.src.js)
-        .pipe(babel({
-            presets: ['@babel/env']
-        }))
-        .pipe(concat('scripts.js'))
-        .pipe(dest(path.build.js))
         .pipe(
-            uglify()
+            babel({
+                presets: [["@babel/preset-env", { modules: false }]],
+            })
         )
+        .pipe(concat("scripts.js"))
+        .pipe(dest(path.build.js))
+        .pipe(uglify())
         .pipe(
             rename({
                 basename: "scripts",
-                extname: ".min.js"
+                extname: ".min.js",
             })
         )
         .pipe(dest(path.build.js))
-        .pipe(browsersync.stream())
+        .pipe(browsersync.stream());
 }
 
 function libs() {
