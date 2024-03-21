@@ -2,7 +2,7 @@
 const project_flr = "dist";
 const source_flr = "app";
 const baseDir = "./" + project_flr + "/";
-const fs = require('fs');
+const fs = require("fs");
 const pathFiles = "/assets/template/";
 const outPathFiles = "/assets/template/";
 
@@ -19,7 +19,7 @@ let path = {
         svg: project_flr + pathFiles + "images/svg/",
     },
     src: {
-        html: source_flr + "/html/*.html",
+        html: source_flr + "/pages/*.html",
         css: source_flr + "/scss/style.scss",
         js: source_flr + "/scripts/**/*.js",
         video: source_flr + "/video/*.{mp4,webm,ogv,swf}",
@@ -31,52 +31,49 @@ let path = {
     },
     watch: {
         html: source_flr + "/**/*.html",
-        css: source_flr + "/scss/**/*.scss",
+        css: source_flr + "/**/*.scss",
         video: source_flr + "/video/**/*.{mp4,webm,ogv,swf}",
         js: source_flr + "/scripts/**/*.js",
         libs: source_flr + "/libs/**/*.{js}",
         img: source_flr + "/images/**/*.{jpg,png,svg,gif,ico,webp}",
-        svg: source_flr + "/html/svg/*.svg"
+        svg: source_flr + "/html/svg/*.svg",
     },
     clean: baseDir,
-}
+};
 
 // plugins
 let { src, dest } = require("gulp"),
     gulp = require("gulp"),
-    plumber = require('gulp-plumber'),
-    sourcemaps = require('gulp-sourcemaps'),
-    fileinclude = require('gulp-file-include'),
-    del = require('del'),
-    formatHtml = require('gulp-format-html'),
-    scss = require('gulp-sass')(require('sass')),
-    gcmq = require('gulp-group-css-media-queries'),
-    autoprefixer = require('gulp-autoprefixer'),
-    cleanCSS = require('gulp-clean-css'),
+    plumber = require("gulp-plumber"),
+    sourcemaps = require("gulp-sourcemaps"),
+    fileinclude = require("gulp-file-include"),
+    del = require("del"),
+    formatHtml = require("gulp-format-html"),
+    scss = require("gulp-sass")(require("sass")),
+    gcmq = require("gulp-group-css-media-queries"),
+    autoprefixer = require("gulp-autoprefixer"),
+    cleanCSS = require("gulp-clean-css"),
     rename = require("gulp-rename"),
-    uglify = require('gulp-uglify-es').default,
-    babel = require('gulp-babel'),
-    imagemin = require('gulp-imagemin'),
-    svgSprite = require('gulp-svg-sprite'),
-    ttf2woff = require('gulp-ttf2woff'),
-    ttf2woff2 = require('gulp-ttf2woff2'),
-    fonter = require('gulp-fonter'),
-    concat = require('gulp-concat'),
+    uglify = require("gulp-uglify-es").default,
+    babel = require("gulp-babel"),
+    imagemin = require("gulp-imagemin"),
+    svgSprite = require("gulp-svg-sprite"),
+    ttf2woff = require("gulp-ttf2woff"),
+    ttf2woff2 = require("gulp-ttf2woff2"),
+    fonter = require("gulp-fonter"),
+    concat = require("gulp-concat"),
     browsersync = require("browser-sync").create();
 
-
-const jsFiles = [
-    'node_modules/swiper/swiper-bundle.js',
-];
+const jsFiles = ["node_modules/swiper/swiper-bundle.js", "node_modules/jquery/dist/jquery.min.js", "node_modules/imask/dist/imask.min.js"];
 
 function browserSync() {
     browsersync.init({
         server: {
-            baseDir: baseDir
+            baseDir: baseDir,
         },
         port: 3000,
-        notify: false
-    })
+        notify: false,
+    });
 }
 
 function clean() {
@@ -84,39 +81,35 @@ function clean() {
 }
 
 function html() {
-    return src(path.src.html)
-        .pipe(fileinclude())
-        .pipe(formatHtml())
-        .pipe(dest(path.build.html))
-        .pipe(browsersync.stream())
+    return src(path.src.html).pipe(fileinclude()).pipe(formatHtml()).pipe(dest(path.build.html)).pipe(browsersync.stream());
 }
 
 function css() {
-    return src(path.src.css)
-        .pipe(sourcemaps.init())
-        .pipe(
-            scss({
-                outputStyle: "expanded"
-            })
-        )
-        .pipe(sourcemaps.init({ loadMaps: true }))
-        .pipe(
-            autoprefixer({
-                overrideBrowserslist: ['last 5 version'],
-                cascade: true
-            })
-        )
-        // .pipe(webpcss())
-        .pipe(dest(path.build.css))
-        .pipe(cleanCSS())
-        .pipe(
-            rename({
-                extname: ".min.css"
-            })
-        )
-        // .pipe(sourcemaps.write())
-        .pipe(dest(path.build.css))
-        .pipe(browsersync.stream())
+    return (
+        src(path.src.css)
+            .pipe(sourcemaps.init())
+            .pipe(
+                scss({
+                    outputStyle: "expanded",
+                })
+            )
+            .pipe(sourcemaps.init({ loadMaps: true }))
+            .pipe(
+                autoprefixer({
+                    overrideBrowserslist: ["last 5 version"],
+                    cascade: true,
+                })
+            )
+            .pipe(dest(path.build.css))
+            .pipe(cleanCSS())
+            .pipe(
+                rename({
+                    extname: ".min.css",
+                })
+            )
+            .pipe(dest(path.build.css))
+            .pipe(browsersync.stream())
+    );
 }
 
 function js() {
@@ -142,60 +135,50 @@ function js() {
 function libs() {
     return src(jsFiles)
         .pipe(plumber())
-        .pipe(concat('libs.js'))
+        .pipe(concat("libs.js"))
         .pipe(uglify())
-        .pipe(rename('libs.min.js'))
+        .pipe(rename("libs.min.js"))
         .pipe(gulp.dest(path.build.libs))
-        .pipe(browsersync.stream())
+        .pipe(browsersync.stream());
 }
 
 function fonts2woff() {
-    src(path.src.sourcesFonts)
-        .pipe(ttf2woff())
-        .pipe(dest(path.src.fontsStorage));
-    return src(path.src.sourcesFonts)
-        .pipe(ttf2woff2())
-        .pipe(dest(path.src.fontsStorage));
+    src(path.src.sourcesFonts).pipe(ttf2woff()).pipe(dest(path.src.fontsStorage));
+    return src(path.src.sourcesFonts).pipe(ttf2woff2()).pipe(dest(path.src.fontsStorage));
 }
 
 function fonts() {
-    return src(path.src.fonts)
-        .pipe(dest(path.build.fonts))
+    return src(path.src.fonts).pipe(dest(path.build.fonts));
 }
 
 function video() {
-    return src(path.src.video)
-        .pipe(dest(path.build.video))
+    return src(path.src.video).pipe(dest(path.build.video));
 }
 
 function svg() {
-    return gulp.src([source_flr + '/html/svg/*.svg'])
+    return gulp
+        .src([source_flr + "/html/svg/*.svg"])
         .pipe(dest(path.build.svg))
-        .pipe(svgSprite({
-            mode: {
-                stack: {
-                    sprite: "../icons/icons.svg",
-                    example: true,
-                }
-            },
-        }
-        ))
-        .pipe(gulp.dest(path.build.svg))
+        .pipe(
+            svgSprite({
+                mode: {
+                    stack: {
+                        sprite: "../icons/icons.svg",
+                        example: true,
+                    },
+                },
+            })
+        )
+        .pipe(gulp.dest(path.build.svg));
 }
 
 function images() {
-    return src(path.src.img)
-        .pipe(src(path.src.img))
-        // .pipe(
-        //     imagemin({
-        //         progressive: true,
-        //         svgoPlugins: [{ removeViewBox: false }],
-        //         interlaced: true,
-        //         optimizationLevel: 0 // 0 to 7
-        //     })
-        // )
-        .pipe(dest(path.build.img))
-        .pipe(browsersync.stream())
+    return (
+        src(path.src.img)
+            .pipe(src(path.src.img))
+            .pipe(dest(path.build.img))
+            .pipe(browsersync.stream())
+    );
 }
 
 // eventListener
@@ -211,41 +194,46 @@ function watchFiles() {
 
 // add fonts in style.scss
 function fontsStyle() {
-    let file_content = fs.readFileSync(source_flr + '/scss/fonts.scss');
-    if (file_content == '') {
-        fs.writeFile(source_flr + '/scss/fonts.scss', '', cb);
+    let file_content = fs.readFileSync(source_flr + "/scss/fonts.scss");
+    if (file_content == "") {
+        fs.writeFile(source_flr + "/scss/fonts.scss", "", cb);
         return fs.readdir(path.src.fontsStorage, function (err, items) {
             if (items) {
                 let c_fontname;
                 for (var i = 0; i < items.length; i++) {
-                    if (items[i] != 'sources-fonts') {
-                        let fontname = items[i].split('.');
+                    if (items[i] != "sources-fonts") {
+                        let fontname = items[i].split(".");
                         fontname = fontname[0];
                         if (c_fontname != fontname) {
-                            fs.appendFile(source_flr + '/scss/fonts.scss', '@include font("' + fontname + '", "' + fontname + '", "400", "normal");\r\n', cb);
+                            fs.appendFile(
+                                source_flr + "/scss/fonts.scss",
+                                '@include font("' + fontname + '", "' + fontname + '", "400", "normal");\r\n',
+                                cb
+                            );
                         }
                         c_fontname = fontname;
                     }
                 }
             }
-        })
+        });
     }
 }
 
-function cb() { }
+function cb() {}
 
 // fonts otf2ttf
-gulp.task('fonter', function () {
-    return src([source_flr + '/fonts/*.otf'])
-        .pipe(fonter({
-            formats: ['ttf']
-        }))
-        .pipe(dest(source_flr + '/fonts/'))
-})
+gulp.task("fonter", function () {
+    return src([source_flr + "/fonts/*.otf"])
+        .pipe(
+            fonter({
+                formats: ["ttf"],
+            })
+        )
+        .pipe(dest(source_flr + "/fonts/"));
+});
 
-let build = gulp.series(clean, html, libs, gulp.parallel(css, video, js, images, fonts))
+let build = gulp.series(clean, html, libs, gulp.parallel(css, video, js, images, fonts));
 let watch = gulp.parallel(build, watchFiles, browserSync);
-
 
 exports.fontsStyle = fontsStyle;
 exports.fonts2woff = fonts2woff;
