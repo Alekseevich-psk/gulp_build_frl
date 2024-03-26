@@ -219,3 +219,11 @@ sub {
     position: relative;
     bottom: -0.4em;
 }
+
+input,
+textarea,
+button,
+select,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
