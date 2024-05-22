@@ -21,7 +21,7 @@ let path = {
     src: {
         html: source_flr + "/pages/*.html",
         css: source_flr + "/scss/style.scss",
-        js: source_flr + "/scripts/**/*.js",
+        js: source_flr + "/**/*.js",
         video: source_flr + "/video/*.{mp4,webm,ogv,swf}",
         img: source_flr + "/images/**/*.{jpg,png,svg,gif,ico,webp}",
         fonts: source_flr + "/fonts/*.{otf,ttf,woff2,woff}",
@@ -33,7 +33,7 @@ let path = {
         html: source_flr + "/**/*.html",
         css: source_flr + "/**/*.scss",
         video: source_flr + "/video/**/*.{mp4,webm,ogv,swf}",
-        js: source_flr + "/scripts/**/*.js",
+        js: source_flr + "/**/*.js",
         libs: source_flr + "/libs/**/*.{js}",
         img: source_flr + "/images/**/*.{jpg,png,svg,gif,ico,webp}",
         svg: source_flr + "/html/svg/*.svg",
